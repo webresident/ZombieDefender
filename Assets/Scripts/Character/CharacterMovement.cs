@@ -1,7 +1,12 @@
+using System;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
+    public static event Action<float,float> OnMoveAnimation;
+    public static event Action<bool> OnJump;
+    public static event Action<bool> OnGround;
+
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpHeight = 1f;
     [SerializeField] private float gravity = -9.81f;
@@ -22,7 +27,9 @@ public class CharacterMovement : MonoBehaviour
     private void Update()
     {
         isGrounded = IsGrounded();
+        OnGround?.Invoke(isGrounded);
         Move();
+        Jump();
     }
 
     private void Move()
@@ -34,13 +41,19 @@ public class CharacterMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+        
+        OnMoveAnimation.Invoke(x, z);
 
         Vector3 move = transform.right * x + transform.forward * z;
         characterController.Move(move * speed * Time.deltaTime);
+    }
 
+    private void Jump()
+    {
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            OnJump.Invoke(true);
         }
 
         velocity.y += gravity * Time.deltaTime;
