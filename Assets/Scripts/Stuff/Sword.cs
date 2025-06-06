@@ -4,6 +4,7 @@ using UnityEngine;
 public class Sword : MonoBehaviour
 {
     public static event Action<string, int> OnHit;
+    public static event Action<string, int> OnEnemyHit;
 
     [SerializeField] private int damage = 25;
 
@@ -16,9 +17,14 @@ public class Sword : MonoBehaviour
             {
                 OnHit?.Invoke(dummy.uniqueID, damage);
             }
-            else
+        }
+        
+        if (other.CompareTag("Enemy"))
+        {
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
+            if(enemy != null)
             {
-                print("null nahoi");
+                OnEnemyHit?.Invoke(enemy.uniqueID, damage);
             }
         }
     }
