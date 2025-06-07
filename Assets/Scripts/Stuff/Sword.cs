@@ -8,23 +8,29 @@ public class Sword : MonoBehaviour
 
     [SerializeField] private int damage = 25;
 
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.CompareTag("Dummy"))
         {
             Dummy dummy = other.gameObject.GetComponent<Dummy>();
             if (dummy != null)
             {
-                OnHit?.Invoke(dummy.uniqueID, damage);
+                OnHit?.Invoke(dummy.UniqueID, damage);
             }
         }
         
         if (other.CompareTag("Enemy"))
         {
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            if(enemy != null)
+            if (enemy != null)
             {
-                OnEnemyHit?.Invoke(enemy.uniqueID, damage);
+                OnEnemyHit?.Invoke(enemy.UniqueID, damage);
             }
         }
     }

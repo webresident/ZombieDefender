@@ -3,8 +3,7 @@ using UnityEngine.AI;
 
 public class ZombieChase : StateMachineBehaviour
 {
-    [SerializeField] private float attackRange = 1f;
-    [SerializeField] private float chasingRange = 12;
+    private float attackRange = 2f;
 
     private NavMeshAgent agent;
     private Transform player;
@@ -13,8 +12,10 @@ public class ZombieChase : StateMachineBehaviour
     {
         agent = animator.GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent.speed = 3.5f;
+        agent.speed = 5f;
         agent.isStopped = false;
+        agent.SetDestination(player.position);
+        agent.transform.LookAt(player);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -22,8 +23,8 @@ public class ZombieChase : StateMachineBehaviour
     {
         agent.SetDestination(player.position);
 
-        float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
-        if (distanceToPlayer > 12)
+        float distanceToPlayer = Vector3.Distance(player.position, agent.transform.position);
+        if (distanceToPlayer > 8)
         {
             animator.SetBool("isChasing", false);
         }
@@ -37,6 +38,5 @@ public class ZombieChase : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.isStopped = true;
     }
 }

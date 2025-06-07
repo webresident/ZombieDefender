@@ -30,6 +30,15 @@ public class CharacterMovement : MonoBehaviour
         OnGround?.Invoke(isGrounded);
         Move();
         Jump();
+        
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = 8f;
+        }
+        else
+        {
+            speed = 5f;
+        }
     }
 
     private void Move()

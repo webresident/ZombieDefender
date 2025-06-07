@@ -8,7 +8,7 @@ public class ZombieWalk : StateMachineBehaviour
     private List<Transform> waypoints = new List<Transform>();
     private Transform nextWaypoint;
 
-    [SerializeField] private float chaseRange = 8;
+    private float chaseRange = 8;
     private Transform player;
 
     private float waitTime = 5f;
@@ -30,7 +30,6 @@ public class ZombieWalk : StateMachineBehaviour
         {
             waypoints.Add(transform);
         }
-        //Debug.Log(waypoints.Count);
 
         SetNextDestination();
     }
@@ -38,7 +37,7 @@ public class ZombieWalk : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
+        float distanceToPlayer = Vector3.Distance(player.position, agent.transform.position);
         if (distanceToPlayer < chaseRange)
         {
             animator.SetBool("isChasing", true);
@@ -65,7 +64,6 @@ public class ZombieWalk : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.isStopped = true;
     }
 
     private void SetNextDestination()

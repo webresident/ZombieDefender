@@ -20,10 +20,6 @@ public class CharacterHealth : MonoBehaviour
         anim.SetTrigger("isDamaged");
 
         health -= damage;
-        if (health <= 0)
-        {
-            anim.SetTrigger("isDeath");
-        }
     }
 
     private void OnDisable()

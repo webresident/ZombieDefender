@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
 {
-    [SerializeField] private Collider leftSword;
-    [SerializeField] private Collider rightSword;
+    [SerializeField] private GameObject leftSword;
+    [SerializeField] private GameObject rightSword;
 
     private Animator anim;
 
@@ -16,6 +16,14 @@ public class CharacterAnimation : MonoBehaviour
         CharacterMovement.OnGround += HandlerLandAnimation;
     
         CharacterCombat.OnAttack += HandlerAttackAnimation;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(2))
+        {
+            anim.SetTrigger("isRoll");
+        }
     }
 
     private void HandlerMoveAnimation(float x, float z)
@@ -90,12 +98,12 @@ public class CharacterAnimation : MonoBehaviour
 
     private void SwitchOnLeftSword()
     {
-        leftSword.isTrigger = true;
+        leftSword.SetActive(true);
     }
 
     private void SwitchOffLeftSword()
     {
-        leftSword.isTrigger = false;
+        leftSword.SetActive(false);
     }
 
     #endregion
@@ -104,12 +112,12 @@ public class CharacterAnimation : MonoBehaviour
 
     private void SwitchOnRightSword()
     {
-        rightSword.isTrigger = true;
+        rightSword.SetActive(true);
     }
 
     private void SwitchOffRightSword()
     {
-        rightSword.isTrigger = false;
+        rightSword.SetActive(false);
     }
 
     #endregion

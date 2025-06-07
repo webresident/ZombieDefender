@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ZombieAttack : StateMachineBehaviour
 {
-    [SerializeField] private float attackRange = 1f;
+    private float attackRange = 1.7f;
 
     private Transform player;
 

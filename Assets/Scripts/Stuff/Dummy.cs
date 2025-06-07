@@ -5,7 +5,7 @@ public class Dummy : MonoBehaviour
 {
     [SerializeField] private Animator anim;
 
-    public string uniqueID { get; set; }
+    public string UniqueID { get; set; }
 
     private void Start()
     {
@@ -16,7 +16,7 @@ public class Dummy : MonoBehaviour
 
     private void HandlerGetAttack(string id, int damage)
     {
-        if (uniqueID == id)
+        if (UniqueID == id)
         {
             anim.SetTrigger("isAttacked");
         }
@@ -24,7 +24,7 @@ public class Dummy : MonoBehaviour
 
     private void GenerateUniqueID()
     {
-        uniqueID = Guid.NewGuid().ToString();
+        UniqueID = Guid.NewGuid().ToString();
     }
 
     private void OnDisable()

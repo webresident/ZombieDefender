@@ -5,18 +5,19 @@ public class Enemy : MonoBehaviour
 {
     public static event Action<int> OnPlayerHit;
 
-    [SerializeField] private Collider collider;
+    [SerializeField] private GameObject handHitObject;
     
     private Animator anim;
 
-    public string uniqueID { get; set; }
+    public string UniqueID { get; set; }
     public int health = 0;
 
     public int damage;
 
     private void Start()
     {
-        collider = GetComponent<Collider>();
+        anim = GetComponent<Animator>();
+        SwitchOffAttack();
 
         GenerateUniqueID();
         
@@ -27,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     private void HandlerGetAttack(string id, int damage)
     {
-        if (uniqueID == id)
+        if (UniqueID == id)
         {
             anim.SetTrigger("isAttacked");
         }
@@ -48,12 +49,12 @@ public class Enemy : MonoBehaviour
 
     private void SwitchOnAttack()
     {
-        collider.isTrigger = true;
+        handHitObject.SetActive(true);
     }
 
     private void SwitchOffAttack()
     {
-        collider.isTrigger = false;
+        handHitObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,7 +67,7 @@ public class Enemy : MonoBehaviour
 
     private void GenerateUniqueID()
     {
-        uniqueID = Guid.NewGuid().ToString();
+        UniqueID = Guid.NewGuid().ToString();
     }
 
     private void OnDisable()
