@@ -303,7 +303,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528642d0295b02c4d99b50a5d8fd45aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 2
 --- !u!1102 &2226305469385166884
 AnimatorState:
   serializedVersion: 6
@@ -415,7 +414,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Idle01
+  m_Name: Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -525,7 +524,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7291a2de3d700fc45a413eb373a70c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseRange: 8
 --- !u!114 &7562073331507536877
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -538,8 +536,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d01043ddb42124bbc8ec010ae93083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 2
-  chasingRange: 10
 --- !u!1101 &7898338892883993957
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

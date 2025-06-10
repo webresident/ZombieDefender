@@ -1,9 +1,13 @@
+using System.Threading;
 using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
 {
     [SerializeField] private GameObject leftSword;
     [SerializeField] private GameObject rightSword;
+
+    [SerializeField] private float timer = 1f;
+    private float time;
 
     private Animator anim;
 
@@ -16,13 +20,21 @@ public class CharacterAnimation : MonoBehaviour
         CharacterMovement.OnGround += HandlerLandAnimation;
     
         CharacterCombat.OnAttack += HandlerAttackAnimation;
+
+        time = 0f;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(2))
+        if (time > 0f)
+        {
+            time -= Time.deltaTime;
+        }
+
+        if (time <= 0f && Input.GetMouseButtonDown(2))
         {
             anim.SetTrigger("isRoll");
+            time = timer;
         }
     }
 

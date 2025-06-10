@@ -1,18 +1,20 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
     public static event Action<int> OnPlayerHit;
 
     [SerializeField] private GameObject handHitObject;
-    
+    [SerializeField] private NavMeshAgent agent;
+
     private Animator anim;
 
     public string UniqueID { get; set; }
     public int health = 0;
 
-    public int damage;
+    public int damage = 25;
 
     private void Start()
     {
@@ -73,5 +75,6 @@ public class Enemy : MonoBehaviour
     private void OnDisable()
     {
         Sword.OnEnemyHit -= HandlerGetAttack;
+    
     }
 }

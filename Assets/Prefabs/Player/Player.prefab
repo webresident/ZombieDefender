@@ -1973,6 +1973,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3934067272420929070}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 26884749826e6774aa58a039de667f50,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5569132511868365599}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 26884749826e6774aa58a039de667f50,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1639702712734568046}
   m_SourcePrefab: {fileID: 100100000, guid: 26884749826e6774aa58a039de667f50, type: 3}
 --- !u!4 &7257338676033058002 stripped
 Transform:
@@ -2057,3 +2065,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77339434794a0bb44b10a38b1bcb85de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftSword: {fileID: 0}
+  rightSword: {fileID: 0}
+  timer: 1
+--- !u!114 &5569132511868365599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8069588239131291240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f6ad06f40adc7f4b98f8c6b011b81cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 25
+  timer: 1
+--- !u!114 &1639702712734568046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8069588239131291240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a03218cac4489b48a3adc6dc54de5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPosition: {fileID: 0}
+  controller: {fileID: 5138751810161823588}
+  health: 100
+  respawnTime: 2

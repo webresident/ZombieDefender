@@ -29,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
         isGrounded = IsGrounded();
         OnGround?.Invoke(isGrounded);
         Move();
+
         Jump();
         
         if(Input.GetKey(KeyCode.LeftShift))
