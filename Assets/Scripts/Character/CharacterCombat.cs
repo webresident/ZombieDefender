@@ -4,7 +4,6 @@ using UnityEngine;
 public class CharacterCombat : MonoBehaviour
 {
     public static event Action<int> OnAttack;
-    [SerializeField] private int damage = 25;
 
     [SerializeField] private float timer = 1f;
     private float time = 0;
@@ -15,6 +14,11 @@ public class CharacterCombat : MonoBehaviour
     }
     private void Update()
     {
+        if (PlayerRespawnManager.instance.IsPlayerDead())
+        {
+            return;
+        }
+
         if (time <= 0)
         {
             LeftAttack();

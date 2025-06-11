@@ -11,6 +11,8 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private float respawnTime = 2f;
 
+    private bool isBlock = false;
+
     private Animator anim;
 
     private void Start()
@@ -20,18 +22,27 @@ public class CharacterHealth : MonoBehaviour
         health = 100;
 
         Enemy.OnPlayerHit += GetDamage;
+
+        CharacterAnimation.OnBlock += SetBlock;
     }
 
     private void GetDamage(int damage)
     {
-        anim.SetTrigger("isDamaged");
-
-        health -= damage;
-
-        print(health);
-
-        if (health <= 0)
+        if (isBlock == true)
         {
+            return;
+        }
+
+        if (health > 0)
+        {
+            health -= damage;
+            anim.SetTrigger("isDamaged");
+            //print(health);
+        }
+
+        if(health <= 0)
+        {
+            gameObject.tag = "Corpse";
             OnPlayerDeath.Invoke(true);
             Invoke("Respawn", respawnTime);
             anim.SetTrigger("isDeath");
@@ -48,10 +59,18 @@ public class CharacterHealth : MonoBehaviour
         anim.Rebind();
         anim.Update(0);
         OnPlayerDeath.Invoke(false);
+        gameObject.tag = "Player";
+    }
+
+    private void SetBlock(bool state)
+    {
+        isBlock = state;
     }
 
     private void OnDisable()
     {
         Enemy.OnPlayerHit -= GetDamage;
+
+        CharacterAnimation.OnBlock -= SetBlock;
     }
 }

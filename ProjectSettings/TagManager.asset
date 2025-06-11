@@ -8,6 +8,7 @@ TagManager:
   - Dummy
   - PatrollWaypoints
   - Enemy
+  - Corpse
   layers:
   - Default
   - TransparentFX

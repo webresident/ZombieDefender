@@ -1,8 +1,9 @@
-using System.Threading;
+using System;
 using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
 {
+    public static event Action<bool> OnBlock;
     [SerializeField] private GameObject leftSword;
     [SerializeField] private GameObject rightSword;
 
@@ -26,15 +27,32 @@ public class CharacterAnimation : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerRespawnManager.instance.IsPlayerDead())
+        {
+            return;
+        }
+
         if (time > 0f)
         {
             time -= Time.deltaTime;
         }
 
-        if (time <= 0f && Input.GetMouseButtonDown(2))
+        if (time <= 0f && Input.GetKeyDown(KeyCode.Z))
         {
             anim.SetTrigger("isRoll");
             time = timer;
+        }
+
+        if (Input.GetMouseButton(2))
+        {
+            anim.SetBool("isBlock", true);
+            OnBlock?.Invoke(true);
+        }
+
+        if (Input.GetMouseButtonUp(2))
+        {
+            anim.SetBool("isBlock", false);
+            OnBlock?.Invoke(false);
         }
     }
 

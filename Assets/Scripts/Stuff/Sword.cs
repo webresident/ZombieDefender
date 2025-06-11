@@ -15,7 +15,6 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag("Dummy"))
         {
             Dummy dummy = other.gameObject.GetComponent<Dummy>();
@@ -30,6 +29,7 @@ public class Sword : MonoBehaviour
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
+                print("Invoke decreasing");
                 OnEnemyHit?.Invoke(enemy.UniqueID, damage);
             }
         }

@@ -26,6 +26,10 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerRespawnManager.instance.IsPlayerDead())
+        {
+            return;
+        }
         isGrounded = IsGrounded();
         OnGround?.Invoke(isGrounded);
         Move();

@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 1124565562603196459}
   m_Layer: 0
   m_Name: Zombie
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -562,9 +562,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a270b1dc146d502499af51466eaafde3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 118453152273789220}
-  health: 0
-  damage: 0
+  handHitObject: {fileID: 7331105963297595254}
+  agent: {fileID: 1467268308371600016}
 --- !u!54 &1124565562603196459
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2025,7 +2024,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

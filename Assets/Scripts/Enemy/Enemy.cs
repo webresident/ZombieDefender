@@ -12,12 +12,13 @@ public class Enemy : MonoBehaviour
     private Animator anim;
 
     public string UniqueID { get; set; }
-    public int health = 0;
+    private int health = 0;
 
-    public int damage = 25;
+    private int damage = 25;
 
     private void Start()
     {
+        print("Settings been setted");
         anim = GetComponent<Animator>();
         SwitchOffAttack();
 
@@ -30,18 +31,18 @@ public class Enemy : MonoBehaviour
 
     private void HandlerGetAttack(string id, int damage)
     {
-        if (UniqueID == id)
+        if (UniqueID == id && health > 0)
         {
+            health -= damage;
+            print($"Zombie with ID:{UniqueID}_" + health);
             anim.SetTrigger("isAttacked");
         }
 
-        health -= damage;
         if (health <= 0)
         {
             anim.SetTrigger("isDead");
             Invoke("HandlerDeath", 1f);
         }
-        print(health);
     }
 
     private void HandlerDeath()
