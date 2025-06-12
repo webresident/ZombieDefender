@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     public static event Action<int> OnPlayerHit;
+    public static event Action<string> OnDeath;
 
     [SerializeField] private GameObject handHitObject;
     [SerializeField] private NavMeshAgent agent;
@@ -16,14 +17,15 @@ public class Enemy : MonoBehaviour
 
     private int damage = 25;
 
+    private void Awake()
+    {
+        GenerateUniqueID();
+    }
+
     private void Start()
     {
-        print("Settings been setted");
         anim = GetComponent<Animator>();
-        SwitchOffAttack();
 
-        GenerateUniqueID();
-        
         health = 100;
 
         Sword.OnEnemyHit += HandlerGetAttack;
@@ -41,6 +43,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             anim.SetTrigger("isDead");
+            OnDeath?.Invoke(UniqueID);
             Invoke("HandlerDeath", 1f);
         }
     }
@@ -76,6 +79,5 @@ public class Enemy : MonoBehaviour
     private void OnDisable()
     {
         Sword.OnEnemyHit -= HandlerGetAttack;
-    
     }
 }

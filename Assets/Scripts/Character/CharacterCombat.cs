@@ -14,7 +14,7 @@ public class CharacterCombat : MonoBehaviour
     }
     private void Update()
     {
-        if (PlayerRespawnManager.instance.IsPlayerDead())
+        if (PlayerManager.instance.IsPlayerDead())
         {
             return;
         }
@@ -32,18 +32,20 @@ public class CharacterCombat : MonoBehaviour
 
     private void LeftAttack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.Alpha1))
         {
             time = timer;
+            PlayerManager.instance.SetAttack();
             OnAttack?.Invoke(0);
         }
     }
 
     private void RightAttack()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKey(KeyCode.Alpha2))
         {
             time = timer;
+            PlayerManager.instance.SetAttack();
             OnAttack?.Invoke(1);
         }
     }

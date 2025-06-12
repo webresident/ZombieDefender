@@ -21,13 +21,8 @@ public class ZombieWalk : StateMachineBehaviour
         agent = animator.GetComponent<NavMeshAgent>();
         agent.isStopped = false;
         agent.speed = 2f;
-
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject is not null)
-        {
-            player = playerObject.transform;
-        }
-
+        
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         GameObject go = GameObject.FindGameObjectWithTag("PatrollWaypoints");
         waypoints.Clear();
@@ -42,7 +37,7 @@ public class ZombieWalk : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (player is not null)
+        if (!PlayerManager.instance.IsPlayerDead())
         {
             float distanceToPlayer = Vector3.Distance(player.position, agent.transform.position);
             if (distanceToPlayer < chaseRange)

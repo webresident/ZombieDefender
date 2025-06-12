@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -10,12 +11,21 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float checkRadius = 10f;
     [SerializeField] private float spawnDelay = 5f;
 
+    private Dictionary<string, GameObject> amountOfZombies;
 
     private float spawnTimer = 0f;
     private bool playerIsInside = false;
 
+    private void Start()
+    {
+        amountOfZombies = new Dictionary<string, GameObject>();
+        Enemy.OnDeath += RemoveFromDictionary;
+    }
+
     private void Update()
     {
+        print(amountOfZombies.Count);
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         playerIsInside = distanceToPlayer <= checkRadius;
 
@@ -37,12 +47,31 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemiesInsideCircle()
     {
-        int enemyCount = 3;
+        int enemyCount = 3 - amountOfZombies.Count;
+
+        if (enemyCount <= 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < enemyCount; i++)
         {
             Transform spawnPoint = spawnPoints[Random.Range(0,spawnPoints.Length)];
             GameObject zombie = Instantiate(enemy, spawnPoint.transform.position, Quaternion.identity);
             zombie.transform.SetParent(spawnPoint);
+
+            if (zombie.TryGetComponent(out Enemy enemyObj))
+            {
+                amountOfZombies.Add(enemyObj.UniqueID, zombie);
+            }
+        }
+    }
+
+    private void RemoveFromDictionary(string id)
+    {
+        if (amountOfZombies.ContainsKey(id))
+        {
+            amountOfZombies.Remove(id);
         }
     }
     
@@ -53,5 +82,10 @@ public class EnemySpawner : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radiusOfRound);
+    }
+
+    private void OnDestroy()
+    {
+        Enemy.OnDeath -= RemoveFromDictionary;
     }
 }

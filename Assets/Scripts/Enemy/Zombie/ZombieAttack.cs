@@ -9,38 +9,28 @@ public class ZombieAttack : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (PlayerRespawnManager.instance.IsPlayerDead())
-        {
-            OnStateExit(animator, stateInfo, layerIndex);
-        }
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if(playerObject is not null)
-        {
-            player = playerObject.transform;
-        }
-        else
-        {
-            animator.SetBool("isAttacking", false);
-        }
-
-        animator.transform.LookAt(player);
+        LookAtPlayerByY(animator);
     } 
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (player is null)
+        if (!PlayerManager.instance.IsPlayerDead())
         {
-            animator.SetBool("isAttacking", false);
-            return;
+            LookAtPlayerByY(animator);
+            float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
+            if (distanceToPlayer > attackRange)
+            {
+                animator.SetBool("isAttacking", false);
+            }
         }
-
-        animator.transform.LookAt(player);
-        float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
-        if (distanceToPlayer > attackRange)
+        else
         {
+            Debug.Log("Player is dead, switching to partol");
             animator.SetBool("isAttacking", false);
+            animator.SetBool("isPatrolling", true);
         }
     }
 
@@ -48,5 +38,17 @@ public class ZombieAttack : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
+    }
+
+    private void LookAtPlayerByY(Animator animator)
+    {
+        Vector3 direction = player.position - animator.transform.position;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            animator.transform.rotation = targetRotation;
+        }
     }
 }

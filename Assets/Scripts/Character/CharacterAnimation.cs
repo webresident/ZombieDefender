@@ -27,7 +27,7 @@ public class CharacterAnimation : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerRespawnManager.instance.IsPlayerDead())
+        if (PlayerManager.instance.IsPlayerDead())
         {
             return;
         }
@@ -39,6 +39,7 @@ public class CharacterAnimation : MonoBehaviour
 
         if (time <= 0f && Input.GetKeyDown(KeyCode.Z))
         {
+            PlayerManager.instance.PlayerRolling();
             anim.SetTrigger("isRoll");
             time = timer;
         }

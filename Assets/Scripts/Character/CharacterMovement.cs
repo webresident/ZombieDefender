@@ -26,15 +26,20 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerRespawnManager.instance.IsPlayerDead())
+        if (PlayerManager.instance.IsPlayerDead())
         {
             return;
         }
+
         isGrounded = IsGrounded();
         OnGround?.Invoke(isGrounded);
-        Move();
 
-        Jump();
+        if (!PlayerManager.instance.isRolling && !PlayerManager.instance.isAttack)
+        {
+            Move();
+            Jump();
+        }
+
         
         if(Input.GetKey(KeyCode.LeftShift))
         {

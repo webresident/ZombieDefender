@@ -12,6 +12,7 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField] private float respawnTime = 2f;
 
     private bool isBlock = false;
+    private bool isDead = false;
 
     private Animator anim;
 
@@ -40,9 +41,10 @@ public class CharacterHealth : MonoBehaviour
             //print(health);
         }
 
-        if(health <= 0)
+        if(health <= 0 && !isDead)
         {
-            gameObject.tag = "Corpse";
+            isDead = true;
+            controller.enabled = false;
             OnPlayerDeath.Invoke(true);
             Invoke("Respawn", respawnTime);
             anim.SetTrigger("isDeath");
@@ -52,14 +54,13 @@ public class CharacterHealth : MonoBehaviour
     private void Respawn()
     {
         health = 100;
-        controller.enabled = false;
         transform.position = respawnPosition.position;
         controller.enabled = true;
 
         anim.Rebind();
         anim.Update(0);
         OnPlayerDeath.Invoke(false);
-        gameObject.tag = "Player";
+        isDead = false;
     }
 
     private void SetBlock(bool state)

@@ -11,11 +11,7 @@ public class ZombieIdle : StateMachineBehaviour
     {
         timer = 0;
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject is not null)
-        {
-            player = playerObject.transform;
-        }
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -28,7 +24,7 @@ public class ZombieIdle : StateMachineBehaviour
             animator.SetBool("isPatrolling", true);
         }
 
-        if (player is not null)
+        if (!PlayerManager.instance.IsPlayerDead())
         {
             float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
             if (distanceToPlayer < chaseRange)

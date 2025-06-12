@@ -12,6 +12,10 @@ public class CharacterRotation : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerManager.instance.IsPlayerDead())
+        {
+            return;
+        }
         Rotate();
     }
 

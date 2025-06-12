@@ -24,16 +24,15 @@ public class NPC : MonoBehaviour
     
         Interact();
         DisableInteraction();
+        LookAtTarget();
     }
 
     private void Interact()
     {
         if (distanceToPlayer < interactionDistance && Input.GetKeyDown(KeyCode.E) && !isInteraction)
         {
-            transform.LookAt(player);
             anim.SetTrigger("isTalk");
             isInteraction = true;
-            DialogsOnOff(true);
         }
     }
 
@@ -42,18 +41,29 @@ public class NPC : MonoBehaviour
         if (distanceToPlayer > interactionDistance)
         {
             isInteraction = false;
-            transform.LookAt(pointDefault);
-            DialogsOnOff(false);
         }
     }
 
-    private void DialogsOnOff(bool state)
+    private void LookAtTarget()
     {
-        //conversationView.SetActive(state);
-    }
+        Vector3 targetPosition;
 
-    private void ShowTrades()
-    {
+        if (isInteraction)
+        {
+            targetPosition = player.position;
+        }
+        else
+        {
+            targetPosition = pointDefault.position;
+        }
 
+        Vector3 direction = targetPosition - transform.position;
+        direction.y = 0f;
+
+        if (direction.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = targetRotation;
+        }
     }
 }
