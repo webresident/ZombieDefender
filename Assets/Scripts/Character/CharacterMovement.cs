@@ -34,7 +34,7 @@ public class CharacterMovement : MonoBehaviour
         isGrounded = IsGrounded();
         OnGround?.Invoke(isGrounded);
 
-        if (!PlayerManager.instance.isRolling && !PlayerManager.instance.isAttack)
+        if (!PlayerManager.instance.isNotInteractable)
         {
             Move();
             Jump();

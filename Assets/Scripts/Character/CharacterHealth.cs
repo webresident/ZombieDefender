@@ -1,5 +1,7 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterHealth : MonoBehaviour
 {
@@ -11,6 +13,9 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private float respawnTime = 2f;
 
+    [SerializeField] private Slider playerSlider;
+    [SerializeField] private TextMeshProUGUI amoutHealthPoints;
+
     private bool isBlock = false;
     private bool isDead = false;
 
@@ -21,28 +26,36 @@ public class CharacterHealth : MonoBehaviour
         anim = GetComponent<Animator>();
 
         health = 100;
+        playerSlider.value = health;
 
         Enemy.OnPlayerHit += GetDamage;
 
         CharacterAnimation.OnBlock += SetBlock;
     }
 
-    private void GetDamage(int damage)
+    private void GetDamage(int damage, bool isFrontHit)
     {
-        if (isBlock == true)
+        if (isBlock == true && isFrontHit)
         {
             return;
         }
 
         if (health > 0)
         {
-            health -= damage;
             anim.SetTrigger("isDamaged");
-            //print(health);
+            health -= damage;
+            
+            playerSlider.value -= damage;
+            amoutHealthPoints.text = health.ToString();
+
+            PlayerManager.instance.GetHit();
         }
 
         if(health <= 0 && !isDead)
         {
+            playerSlider.gameObject.SetActive(false);
+            amoutHealthPoints.gameObject.SetActive(false);
+
             isDead = true;
             controller.enabled = false;
             OnPlayerDeath.Invoke(true);
@@ -61,6 +74,12 @@ public class CharacterHealth : MonoBehaviour
         anim.Update(0);
         OnPlayerDeath.Invoke(false);
         isDead = false;
+
+        playerSlider.value = 100;
+        playerSlider.gameObject.SetActive(true);
+
+        amoutHealthPoints.text = 100.ToString();
+        amoutHealthPoints.gameObject.SetActive(true);
     }
 
     private void SetBlock(bool state)

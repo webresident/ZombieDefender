@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        print(amountOfZombies.Count);
+        //print(amountOfZombies.Count);
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         playerIsInside = distanceToPlayer <= checkRadius;

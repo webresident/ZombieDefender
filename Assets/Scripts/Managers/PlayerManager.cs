@@ -6,11 +6,12 @@ public class PlayerManager : MonoBehaviour
 
     private bool isPlayerDead = false;
 
-    private float rollTime = 0f;
-    public bool isRolling = false;
+    public float attackTimer = 0f;
+    public float hitTimer = 0f;
+    public float rollTimer = 0f;
 
-    private float attackTime = 0f;
-    public bool isAttack = false;
+    public bool isNotInteractable = false;
+    private float currentTimer = 0f;
 
     private void Awake()
     {
@@ -32,27 +33,15 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if (isRolling)
+        if (isNotInteractable)
         {
-            if(rollTime <= 0f)
+            if (currentTimer <= 0f)
             {
-                isRolling = false;
+                isNotInteractable = false;
             }
             else
             {
-                rollTime -= Time.deltaTime;
-            }
-        }
-
-        if (isAttack)
-        {
-            if (attackTime <= 0f)
-            {
-                isAttack = false;
-            }
-            else
-            {
-                attackTime -= Time.deltaTime;
+                currentTimer -= Time.deltaTime;
             }
         }
     }
@@ -64,14 +53,20 @@ public class PlayerManager : MonoBehaviour
 
     public void PlayerRolling()
     {
-        isRolling = true;
-        rollTime = 1f;
+        isNotInteractable = true;
+        currentTimer = rollTimer;
     }
 
     public void SetAttack()
     {
-        isAttack = true;
-        attackTime = 1f;
+        isNotInteractable = true;
+        currentTimer = attackTimer;
+    }
+
+    public void GetHit()
+    {
+        isNotInteractable = true;
+        currentTimer = hitTimer;
     }
 
     public bool IsPlayerDead()

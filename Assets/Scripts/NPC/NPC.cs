@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class NPC : MonoBehaviour
@@ -5,7 +6,7 @@ public class NPC : MonoBehaviour
     [Header("User Interface")]
     [SerializeField] private GameObject conversationView;
     [SerializeField] private GameObject tradeView;
-
+    [SerializeField] private TextMeshProUGUI interactText;
 
     [Header("Player Interaction")]
     [SerializeField] private Transform player;
@@ -21,7 +22,17 @@ public class NPC : MonoBehaviour
     private void Update()
     {
         distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-    
+
+        if (distanceToPlayer <= interactionDistance)
+        {
+            interactText.text = $"[E] - {name}";
+            interactText.gameObject.SetActive(true);
+        }
+        else
+        {
+            interactText.gameObject.SetActive(false);
+        }
+
         Interact();
         DisableInteraction();
         LookAtTarget();
