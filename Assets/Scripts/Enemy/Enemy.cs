@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
@@ -10,13 +11,14 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private GameObject handHitObject;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private Slider enemySlider;
 
     private Animator anim;
     private Transform player;
 
     public string UniqueID { get; set; }
+    private int maxHealth = 100;
     private int health = 0;
+    public event Action<int, int> OnHealthChanged;
 
     private int damage = 25;
 
@@ -29,10 +31,11 @@ public class Enemy : MonoBehaviour
     {
         anim = GetComponent<Animator>();
 
-        health = 100;
-        enemySlider.value = health;
 
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        health = maxHealth;
+        OnHealthChanged?.Invoke(health, maxHealth);
+
+        player = FindFirstObjectByType<CharacterHealth>().transform;
 
         Sword.OnEnemyHit += HandlerGetAttack;
     }
@@ -47,18 +50,18 @@ public class Enemy : MonoBehaviour
         if (UniqueID == id && health > 0)
         {
             health -= damage;
-            enemySlider.value -= damage;
             //print($"Zombie with ID:{UniqueID}_" + health);
             anim.SetTrigger("isAttacked");
         }
 
         if (health <= 0)
         {
-            enemySlider.gameObject.SetActive(false);
             anim.SetTrigger("isDead");
             OnDeath?.Invoke(UniqueID);
             Invoke("HandlerDeath", 1f);
         }
+
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 
     private void HandlerDeath()
