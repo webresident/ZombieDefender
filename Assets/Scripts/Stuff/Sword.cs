@@ -15,6 +15,11 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
+        {
+            damageable.TakeDamage(damage);
+        }
+        //TODO: to refactor this part of code
         if (other.CompareTag("Dummy"))
         {
             Dummy dummy = other.gameObject.GetComponent<Dummy>();

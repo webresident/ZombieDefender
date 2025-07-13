@@ -6,7 +6,7 @@ public class EnemyHealthUI : MonoBehaviour
     [SerializeField] private Slider _healthSlider;
     private float _maxSliderValue;
     private Enemy _enemy;
-    private Transform _originTransform;
+    private Transform _cachedTransform;
     private Transform _targetTransform;
     private void OnEnable()
     {
@@ -21,16 +21,16 @@ public class EnemyHealthUI : MonoBehaviour
     {
         _enemy = GetComponentInParent<Enemy>();
         _maxSliderValue = _healthSlider.maxValue;
-        _originTransform = transform;
+        _cachedTransform = transform;
         _targetTransform = Camera.main.transform;
     }
 
     private void Update()
     {
-        _originTransform.LookAt(_originTransform.position + _targetTransform.forward);
+        _cachedTransform.LookAt(_cachedTransform.position + _targetTransform.forward);
     }
     public void UpdateHealthSlider(int newValue, int maxValue)
     {
-        _healthSlider.value = newValue / maxValue * _maxSliderValue;
+        _healthSlider.value = (float)newValue / maxValue * _maxSliderValue;
     }
 }

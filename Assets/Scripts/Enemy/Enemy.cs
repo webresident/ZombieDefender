@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     public static event Action<int, bool> OnPlayerHit;
     public static event Action<string> OnDeath;
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
 
     private Animator anim;
     private Transform player;
+    private Transform cachedTransform;
 
     public string UniqueID { get; set; }
     private int maxHealth = 100;
@@ -36,13 +38,19 @@ public class Enemy : MonoBehaviour
         OnHealthChanged?.Invoke(health, maxHealth);
 
         player = FindFirstObjectByType<CharacterHealth>().transform;
-
+        cachedTransform = transform;
         Sword.OnEnemyHit += HandlerGetAttack;
     }
 
     private void Update()
     {
-        player.transform.LookAt(player);
+        cachedTransform.LookAt(player);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Debug.Log("Enemy took damage " + damage);
+        //TODO to transfer all logic from HandlerGetAttack and to test it
     }
 
     private void HandlerGetAttack(string id, int damage)
@@ -57,15 +65,16 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             anim.SetTrigger("isDead");
-            OnDeath?.Invoke(UniqueID);
-            Invoke("HandlerDeath", 1f);
+            StartCoroutine(DieWithDelay(1f));
         }
 
         OnHealthChanged?.Invoke(health, maxHealth);
     }
 
-    private void HandlerDeath()
+    private IEnumerator DieWithDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
+        OnDeath?.Invoke(UniqueID);
         Destroy(gameObject);
     }
 
