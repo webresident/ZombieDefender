@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour, IDamageable
+public class Enemy : MonoBehaviour, IEnemyDamageable
 {
     public static event Action<int, bool> OnPlayerHit;
     public static event Action<string> OnDeath;
@@ -90,7 +90,15 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
+        {
+            if (damageable is not IEnemyDamageable)
+            {
+                damageable.TakeDamage(damage);
+            }
+            //TODO: to refactor code from below and to create separate script for EnemyCombat or to move into ZombieAttack
+        }
+        if (other.CompareTag("Player"))
         {
             Transform playerTransform = other.transform;
 
@@ -112,7 +120,7 @@ public class Enemy : MonoBehaviour, IDamageable
                 isFrontHit = true;
                 print("Hit front" + angle);
             }
-            
+
             OnPlayerHit?.Invoke(finalDamage, isFrontHit);
         }
     }

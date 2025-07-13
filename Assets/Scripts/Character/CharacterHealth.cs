@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterHealth : MonoBehaviour
+public class CharacterHealth : MonoBehaviour, IPlayerDamageable
 {
     public static event Action<bool> OnPlayerDeath;
 
@@ -33,6 +33,13 @@ public class CharacterHealth : MonoBehaviour
         CharacterAnimation.OnBlock += SetBlock;
     }
 
+    public void TakeDamage(int damage)
+    {
+
+        Debug.Log("Player received damage " + damage);
+        //TODO: to refactor GetDamage
+    }
+
     private void GetDamage(int damage, bool isFrontHit)
     {
         if (isBlock == true && isFrontHit)
@@ -44,14 +51,14 @@ public class CharacterHealth : MonoBehaviour
         {
             anim.SetTrigger("isDamaged");
             health -= damage;
-            
+
             playerSlider.value -= damage;
             amoutHealthPoints.text = health.ToString();
 
             PlayerManager.instance.GetHit();
         }
 
-        if(health <= 0 && !isDead)
+        if (health <= 0 && !isDead)
         {
             playerSlider.gameObject.SetActive(false);
             amoutHealthPoints.gameObject.SetActive(false);
@@ -93,4 +100,6 @@ public class CharacterHealth : MonoBehaviour
 
         CharacterAnimation.OnBlock -= SetBlock;
     }
+
+
 }

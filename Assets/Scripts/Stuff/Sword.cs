@@ -17,7 +17,10 @@ public class Sword : MonoBehaviour
     {
         if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
-            damageable.TakeDamage(damage);
+            if (damageable is not IPlayerDamageable)
+            {
+                damageable.TakeDamage(damage);
+            }
         }
         //TODO: to refactor this part of code
         if (other.CompareTag("Dummy"))
