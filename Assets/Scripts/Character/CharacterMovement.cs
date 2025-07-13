@@ -12,7 +12,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
 
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private float groundDistance = 0.16f;
     [SerializeField] private LayerMask groundMask;
 
     private CharacterController characterController;
@@ -39,7 +39,6 @@ public class CharacterMovement : MonoBehaviour
             Move();
             Jump();
         }
-
         
         if(Input.GetKey(KeyCode.LeftShift))
         {
@@ -69,10 +68,11 @@ public class CharacterMovement : MonoBehaviour
 
     private void Jump()
     {
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if(Input.GetButtonDown("Jump") && isGrounded && !PlayerManager.instance.isJumped)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             OnJump.Invoke(true);
+            PlayerManager.instance.SetJump();
         }
 
         velocity.y += gravity * Time.deltaTime;

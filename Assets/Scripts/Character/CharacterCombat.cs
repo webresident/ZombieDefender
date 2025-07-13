@@ -19,7 +19,7 @@ public class CharacterCombat : MonoBehaviour
             return;
         }
 
-        if (time <= 0)
+        if (time <= 0 && !PlayerManager.instance.isJumped && !PlayerManager.instance.isNotInteractable)
         {
             LeftAttack();
             RightAttack();

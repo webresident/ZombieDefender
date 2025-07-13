@@ -6,12 +6,20 @@ public class PlayerManager : MonoBehaviour
 
     private bool isPlayerDead = false;
 
+    [Header("Combat and moving")]
     public float attackTimer = 0f;
     public float hitTimer = 0f;
     public float rollTimer = 0f;
 
     public bool isNotInteractable = false;
+
     private float currentTimer = 0f;
+
+    [Header("Jumping")]
+    public float jumpTimer = 0f;
+    public bool isJumped = false;
+
+    private float currentJumpTimer = 0f;
 
     private void Awake()
     {
@@ -44,6 +52,16 @@ public class PlayerManager : MonoBehaviour
                 currentTimer -= Time.deltaTime;
             }
         }
+
+        if (isJumped)
+        {
+            currentJumpTimer -= Time.deltaTime;
+            
+            if (currentJumpTimer <= 0f)
+            {
+                isJumped = false;
+            }
+        }
     }
 
     private void GetCurrentPlayerHealth(bool state)
@@ -61,6 +79,12 @@ public class PlayerManager : MonoBehaviour
     {
         isNotInteractable = true;
         currentTimer = attackTimer;
+    }
+
+    public void SetJump()
+    {
+        isJumped = true;
+        currentJumpTimer = jumpTimer;
     }
 
     public void GetHit()

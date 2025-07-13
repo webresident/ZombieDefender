@@ -37,7 +37,7 @@ public class CharacterAnimation : MonoBehaviour
             time -= Time.deltaTime;
         }
 
-        if (time <= 0f && Input.GetKeyDown(KeyCode.Z))
+        if (time <= 0f && Input.GetKeyDown(KeyCode.Z) && !PlayerManager.instance.isNotInteractable && !PlayerManager.instance.isJumped)
         {
             PlayerManager.instance.PlayerRolling();
             anim.SetTrigger("isRoll");
@@ -97,15 +97,15 @@ public class CharacterAnimation : MonoBehaviour
 
     private void HandlerLandAnimation(bool isGrounded)
     {
+        anim.SetBool("isGrounded", isGrounded);
+        
         if (isGrounded)
         {
-            anim.SetBool("isGrounded", isGrounded);
             anim.SetBool("isJumping", false);
             anim.SetBool("isFalling", false);
         }
         else
         {
-            anim.SetBool("isGrounded", isGrounded);
             anim.SetBool("isFalling", true);
         }
     }
