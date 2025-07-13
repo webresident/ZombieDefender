@@ -1,22 +1,26 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     public static event Action<int, bool> OnPlayerHit;
     public static event Action<string> OnDeath;
 
     [SerializeField] private GameObject handHitObject;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private Slider enemySlider;
 
     private Animator anim;
     private Transform player;
+    private Transform cachedTransform;
 
     public string UniqueID { get; set; }
+    private int maxHealth = 100;
     private int health = 0;
+    public event Action<int, int> OnHealthChanged;
 
     private int damage = 25;
 
@@ -29,17 +33,24 @@ public class Enemy : MonoBehaviour
     {
         anim = GetComponent<Animator>();
 
-        health = 100;
-        enemySlider.value = health;
 
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        health = maxHealth;
+        OnHealthChanged?.Invoke(health, maxHealth);
 
+        player = FindFirstObjectByType<CharacterHealth>().transform;
+        cachedTransform = transform;
         Sword.OnEnemyHit += HandlerGetAttack;
     }
 
     private void Update()
     {
-        player.transform.LookAt(player);
+        cachedTransform.LookAt(player);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        Debug.Log("Enemy took damage " + damage);
+        //TODO to transfer all logic from HandlerGetAttack and to test it
     }
 
     private void HandlerGetAttack(string id, int damage)
@@ -47,22 +58,23 @@ public class Enemy : MonoBehaviour
         if (UniqueID == id && health > 0)
         {
             health -= damage;
-            enemySlider.value -= damage;
             //print($"Zombie with ID:{UniqueID}_" + health);
             anim.SetTrigger("isAttacked");
         }
 
         if (health <= 0)
         {
-            enemySlider.gameObject.SetActive(false);
             anim.SetTrigger("isDead");
-            OnDeath?.Invoke(UniqueID);
-            Invoke("HandlerDeath", 1f);
+            StartCoroutine(DieWithDelay(1f));
         }
+
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 
-    private void HandlerDeath()
+    private IEnumerator DieWithDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
+        OnDeath?.Invoke(UniqueID);
         Destroy(gameObject);
     }
 

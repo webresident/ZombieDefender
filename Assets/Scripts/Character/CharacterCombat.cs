@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterCombat : MonoBehaviour
@@ -32,7 +33,7 @@ public class CharacterCombat : MonoBehaviour
 
     private void LeftAttack()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
+        if (Input.GetMouseButtonDown(0))
         {
             time = timer;
             PlayerManager.instance.SetAttack();
@@ -42,7 +43,7 @@ public class CharacterCombat : MonoBehaviour
 
     private void RightAttack()
     {
-        if (Input.GetKey(KeyCode.Alpha2))
+        if (Input.GetMouseButtonDown(1))
         {
             time = timer;
             PlayerManager.instance.SetAttack();
