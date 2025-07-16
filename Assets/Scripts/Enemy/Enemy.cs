@@ -1,50 +1,42 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
     public static event Action<int, bool> OnPlayerHit;
-    public static event Action<string> OnDeath;
+    public static event Action<string, int> OnDeath;
 
     [SerializeField] private GameObject handHitObject;
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private TextMeshProUGUI lvlText;
 
     private Animator anim;
-    private Transform player;
-    private Transform cachedTransform;
+
+    private int currentHealth = 0;
+    public event Action<int, int> OnHealthChanged;
 
     public string UniqueID { get; set; }
     private int maxHealth = 100;
-    private int health = 0;
-    public event Action<int, int> OnHealthChanged;
-
     private int damage = 25;
+    public int Lvl { get; set; }
 
     private void Awake()
     {
-        GenerateUniqueID();
+        GenerateEnemyData();
     }
 
     private void Start()
     {
         anim = GetComponent<Animator>();
 
+        currentHealth = maxHealth;
+        lvlText.text = Lvl.ToString();
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        health = maxHealth;
-        OnHealthChanged?.Invoke(health, maxHealth);
-
-        player = FindFirstObjectByType<CharacterHealth>().transform;
-        cachedTransform = transform;
         Sword.OnEnemyHit += HandlerGetAttack;
-    }
-
-    private void Update()
-    {
-        cachedTransform.LookAt(player);
     }
 
     public void TakeDamage(int damage)
@@ -55,26 +47,26 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void HandlerGetAttack(string id, int damage)
     {
-        if (UniqueID == id && health > 0)
+        if (UniqueID == id && currentHealth > 0)
         {
-            health -= damage;
+            currentHealth -= damage;
             //print($"Zombie with ID:{UniqueID}_" + health);
             anim.SetTrigger("isAttacked");
         }
 
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
             anim.SetTrigger("isDead");
             StartCoroutine(DieWithDelay(1f));
         }
 
-        OnHealthChanged?.Invoke(health, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     private IEnumerator DieWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        OnDeath?.Invoke(UniqueID);
+        OnDeath?.Invoke(UniqueID, Lvl);
         Destroy(gameObject);
     }
 
@@ -117,9 +109,13 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    private void GenerateUniqueID()
+    private void GenerateEnemyData()
     {
         UniqueID = Guid.NewGuid().ToString();
+
+        Lvl = UnityEngine.Random.Range(PlayerManager.instance.LVL, PlayerManager.instance.LVL + 5);
+        damage *= Lvl;
+        maxHealth *= Lvl;
     }
 
     private void OnDisable()

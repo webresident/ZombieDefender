@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static event Action<int> OnRemove;
+
     [SerializeField] private Transform player;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject enemy;
@@ -56,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
 
         for (int i = 0; i < enemyCount; i++)
         {
-            Transform spawnPoint = spawnPoints[Random.Range(0,spawnPoints.Length)];
+            Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0,spawnPoints.Length)];
             GameObject zombie = Instantiate(enemy, spawnPoint.transform.position, Quaternion.identity);
             zombie.transform.SetParent(spawnPoint);
 
@@ -67,11 +70,12 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private void RemoveFromDictionary(string id)
+    private void RemoveFromDictionary(string id, int level)
     {
         if (amountOfZombies.ContainsKey(id))
         {
             amountOfZombies.Remove(id);
+            OnRemove?.Invoke(level);
         }
     }
     
