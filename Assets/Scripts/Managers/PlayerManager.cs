@@ -21,6 +21,9 @@ public class PlayerManager : MonoBehaviour
 
     private float currentJumpTimer = 0f;
 
+    // it's just example for npc questions
+    public int LVL { get; set; }
+
     private void Awake()
     {
         if (instance == null)

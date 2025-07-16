@@ -1,14 +1,8 @@
-using TMPro;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Transform player;
-    [SerializeField] private float interactionDistance = 2f;
-
-    [SerializeField] private TextMeshProUGUI interacteText;
-
-    private bool isOpened = false;
+    private bool isOpen = false;
     private Animator anim;
 
     private void Start()
@@ -16,24 +10,24 @@ public class Door : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private void Update()
+    public void ToggleDoor()
     {
-        float dist = Vector3.Distance(transform.position, player.position);
+        isOpen = !isOpen;
+        anim.SetBool("useDoor", isOpen);
+    }
 
-        if (dist <= interactionDistance)
-        {
-            interacteText.text = "[E] - Door";
-            interacteText.gameObject.SetActive(true);
-        }
-        else
-        {
-            interacteText.gameObject.SetActive(false);
-        }
+    public void Interact(Transform interactorTransform)
+    {
+        ToggleDoor();
+    }
 
-        if (dist < interactionDistance && Input.GetKeyDown(KeyCode.E))
-        {
-            isOpened = !isOpened;
-            anim.SetBool("useDoor", isOpened);
-        }
+    public string GetInteractText()
+    {
+        return "Door";
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 }

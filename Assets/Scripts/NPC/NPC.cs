@@ -1,67 +1,45 @@
 using TMPro;
 using UnityEngine;
 
-public class NPC : MonoBehaviour
+public class NPC : MonoBehaviour, IInteractable
 {
-    [Header("User Interface")]
-    [SerializeField] private GameObject conversationView;
-    [SerializeField] private GameObject tradeView;
-    [SerializeField] private TextMeshProUGUI interactText;
+    [Header("Messages")]
+    [SerializeField] protected NPCData data;
+    [SerializeField] protected GameObject container;
+    [SerializeField] protected GameObject questionPrefab;
+    [SerializeField] protected GameObject textPrefab;
 
     [Header("Player Interaction")]
-    [SerializeField] private Transform player;
     [SerializeField] private Transform pointDefault;
-    [SerializeField] private float interactionDistance = 2f;
     [SerializeField] private bool isInteraction = false;
+    private Transform player;
 
     [Header("NPC Elements")]
     [SerializeField] private Animator anim;
 
-    private float distanceToPlayer = 0f;
 
     private void Update()
     {
-        distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer <= interactionDistance)
-        {
-            interactText.text = $"[E] - {name}";
-            interactText.gameObject.SetActive(true);
-        }
-        else
-        {
-            interactText.gameObject.SetActive(false);
-        }
-
-        Interact();
-        DisableInteraction();
-        LookAtTarget();
+        LookAtTarget(player);
     }
 
-    private void Interact()
+    public virtual void Interact(Transform target)
     {
-        if (distanceToPlayer < interactionDistance && Input.GetKeyDown(KeyCode.E) && !isInteraction)
-        {
-            anim.SetTrigger("isTalk");
-            isInteraction = true;
-        }
+        anim.SetTrigger("isTalk");
+        isInteraction = true;
+        player = target;
+        LookAtTarget(player);
+
+        Debug.Log(name + " interaction");
     }
 
-    private void DisableInteraction()
-    {
-        if (distanceToPlayer > interactionDistance)
-        {
-            isInteraction = false;
-        }
-    }
-
-    private void LookAtTarget()
+    private void LookAtTarget(Transform target)
     {
         Vector3 targetPosition;
 
         if (isInteraction)
         {
-            targetPosition = player.position;
+            targetPosition = target.position;
         }
         else
         {
@@ -76,5 +54,34 @@ public class NPC : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }
+    }
+
+    public void FillQuestion(string description)
+    {
+        GameObject question = Instantiate(questionPrefab, container.transform);
+        TextMeshProUGUI questionDesctiption = question.GetComponentInParent<TextMeshProUGUI>();
+        if (questionDesctiption != null)
+        {
+            questionDesctiption.text = description;
+        }
+    }
+
+    public void FillText(string description)
+    {
+        GameObject conversation = Instantiate(textPrefab, container.transform);
+        if (conversation.TryGetComponent(out TextMeshProUGUI conversationDescription))
+        {
+            conversationDescription.text = description;
+        }
+    }
+
+    public string GetInteractText()
+    {
+        return name;
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 }

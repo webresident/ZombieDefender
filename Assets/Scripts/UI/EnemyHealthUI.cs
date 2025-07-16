@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class EnemyHealthUI : MonoBehaviour
     private void Awake()
     {
         _enemy = GetComponentInParent<Enemy>();
+
         _maxSliderValue = _healthSlider.maxValue;
         _cachedTransform = transform;
         _targetTransform = Camera.main.transform;
